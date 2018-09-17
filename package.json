@@ -1,0 +1,23 @@
+{
+    "author": "Goran Karlic",
+    "name": "lecture-contracts",
+    "license": "UNLICENSED",
+    "repository": "https://github.com/gorankarlic/lecture-contracts.git",
+    "version": "1.0.0",
+    "dependencies": {
+        "solc": "^0.4.25",
+        "web3": "1.0.0-beta.36"
+    },
+    "scripts": {
+        "clean": "rm -rf target/geth-data",
+        "install-armv7": "rm -rf target/geth && mkdir -p target/geth && curl --output target/geth.tar.gz https://gethstore.blob.core.windows.net/builds/geth-alltools-linux-arm7-1.8.15-89451f7c.tar.gz && gunzip -c target/geth.tar.gz | tar xopf - -C target/geth --strip-components 1",
+        "install-macos": "rm -rf target/geth && mkdir -p target/geth && curl --output target/geth.tar.gz https://gethstore.blob.core.windows.net/builds/geth-alltools-darwin-amd64-1.8.15-89451f7c.tar.gz && gunzip -c target/geth.tar.gz | tar xopf - -C target/geth --strip-components 1",
+        "blockchain-new": "rm -rf target/geth-data && mkdir -p target/geth-data && cp -rf src/geth/ target/geth-data/ && target/geth/geth --datadir target/geth-data init src/genesis.json",
+        "blockchain-run": "target/geth/geth --datadir target/geth-data --syncmode full --port 30777 --networkid 777 -unlock 0x77763ec12e5bc783a7ec0a8f0d11af7874292834 --password src/geth/password.txt --gasprice 1 --mine",
+        "transfer": "target/geth/geth --datadir target/geth-data --exec 'loadScript(\"src/test.js\")' attach",
+        "test": "node_modules/.bin/_mocha --exit src/test/**/*Test.js"
+    },
+    "devDependencies": {
+        "mocha": "5.2.0"
+    }
+}
