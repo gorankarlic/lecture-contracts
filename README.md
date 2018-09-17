@@ -12,14 +12,6 @@ git clone https://github.com/gorankarlic/lecture-contracts.git ~/lecture-contrac
 
 If you want to learn and play more with **git** you may want to try [GitKraken](https://www.gitkraken.com).
 
-### Install NodeJS
-
-Install [NodeJS version 8](https://nodejs.org/en/download/).
-
-```sh
-curl -sL https://deb.nodesource.com/setup_8.x | sudo -E bash - && sudo apt-get install -y nodejs
-```
-
 ### Geth
 
 Download and install [Geth](https://geth.ethereum.org/downloads/) in ```target/geth```
