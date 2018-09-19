@@ -2,8 +2,47 @@
 
 const fs = require("fs");
 const net = require("net");
+const readline = require("readline");
 const solc = require("solc");
 const Web3 = require("web3");
+
+function ask(question)
+{
+    return new Promise((resolve) =>
+    {
+        const stdio =
+        {
+            input: process.stdin,
+            output: process.stdout
+        };
+        const rl = readline.createInterface(stdio);
+        rl.question("Vote 'yes' or 'no'? ", (answer) =>
+        {
+            rl.close();
+            resolve(answer);
+        });
+    });
+}
+
+async function askYesNo(question)
+{
+    while(true)
+    {
+        const answer = await ask(question);
+        console.log(answer);
+        switch(answer.toLowerCase())
+        {
+            case "no":
+            {
+                return false;
+            }
+            case "yes":
+            {
+                return true;
+            }
+        }
+    }
+}
 
 const account = "0x77763ec12e5bc783a7ec0a8f0d11af7874292834";
 const password = fs.readFileSync(`${__dirname}/geth/password.txt`, "utf8");
@@ -56,13 +95,15 @@ else
                     {
                         console.log("failed to deploy contract", err);
                     });
-                    send.on("receipt", (receipt) =>
+                    send.on("receipt", async (receipt) =>
                     {
+                        console.log("Received receipt", receipt);
                         const address = receipt.contractAddress;
                         console.log("Contract deployed at", address);
-                        console.log("Voting with 'yes'");
+                        const answer = await askYesNo();
+                        console.log(`Voting with ${answer}`);
                         const contract = new web3.eth.Contract(JSON.parse(abi), address);
-                        const send = contract.methods.vote(true).send({from: account});
+                        const send = contract.methods.vote(answer).send({from: account});
                         send.on("transactionHash", (hash) =>
                         {
                             console.log("Received transaction hash", hash);
